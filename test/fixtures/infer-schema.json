@@ -1,0 +1,12 @@
+{
+  "unifiedSchema": {
+    "fields": [
+      { "name": "company", "type": "string", "description": "Legal or trading name of the organization" },
+      { "name": "contactName", "type": "string", "description": "Full name of the primary contact person" },
+      { "name": "email", "type": "string", "description": "Contact email address" },
+      { "name": "phone", "type": "string", "description": "Primary phone number in E.164 form" },
+      { "name": "state", "type": "string", "description": "US state as a 2-letter USPS code" }
+    ]
+  },
+  "rationale": "All three sources describe companies with a single contact, an email, a phone, and a US state under different field names; a five-field canonical schema covers every source without loss."
+}

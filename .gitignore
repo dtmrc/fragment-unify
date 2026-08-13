@@ -1,0 +1,10 @@
+node_modules/
+dist/
+
+.env
+data/unified.db
+data/unified.db-journal
+data/unified.db-wal
+data/unified.db-shm
+*.log
+.DS_Store

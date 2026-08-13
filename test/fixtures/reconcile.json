@@ -1,0 +1,38 @@
+{
+  "entities": [
+    {
+      "company": "Acme Robotics Inc",
+      "contactName": "Dana Whitfield",
+      "email": "dana@acmerobotics.com",
+      "phone": "+14155550132",
+      "state": "CA",
+      "confidence": 0.97,
+      "provenance": [
+        { "field": "company", "source": "A", "value": "Acme Robotics Inc" },
+        { "field": "contactName", "source": "A", "value": "Dana Whitfield" },
+        { "field": "email", "source": "A", "value": "dana@acmerobotics.com" },
+        { "field": "phone", "source": "A", "value": "+14155550132" },
+        { "field": "state", "source": "A", "value": "CA" }
+      ],
+      "members": ["A1", "A2", "B1", "C1"],
+      "reasoning": "Four records share the same normalized phone and email domain; A1 chosen for the fullest company name."
+    },
+    {
+      "company": "Meridian Analytics",
+      "contactName": "Tess Okonkwo",
+      "email": "tess@meridiananalytics.io",
+      "phone": "+15125550244",
+      "state": "TX",
+      "confidence": 1.0,
+      "provenance": [
+        { "field": "company", "source": "B", "value": "Meridian Analytics" },
+        { "field": "contactName", "source": "B", "value": "Tess Okonkwo" },
+        { "field": "email", "source": "B", "value": "tess@meridiananalytics.io" },
+        { "field": "phone", "source": "B", "value": "+15125550244" },
+        { "field": "state", "source": "B", "value": "TX" }
+      ],
+      "members": ["B12"],
+      "reasoning": "Singleton — only appears in source B."
+    }
+  ]
+}

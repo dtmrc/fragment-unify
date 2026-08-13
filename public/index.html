@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fragment→Unify</title>
+    <style>
+      :root {
+        --ink: #14181f;
+        --muted: #5b6673;
+        --line: #e3e8ef;
+        --bg: #f7f9fc;
+        --card: #ffffff;
+        --accent: #2f6df6;
+        --a: #3b82f6;
+        --b: #10b981;
+        --c: #f59e0b;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: var(--ink);
+        background: var(--bg);
+      }
+      header {
+        padding: 28px 32px 20px;
+        border-bottom: 1px solid var(--line);
+        background: var(--card);
+      }
+      h1 { margin: 0 0 4px; font-size: 22px; letter-spacing: -0.01em; }
+      h1 span { color: var(--accent); }
+      header p { margin: 0; color: var(--muted); max-width: 720px; }
+      main { max-width: 1200px; margin: 0 auto; padding: 24px 32px 64px; }
+      section { margin-top: 28px; }
+      h2 { font-size: 15px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 0 0 12px; }
+      .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
+      button {
+        font: inherit; font-weight: 600; color: #fff; background: var(--accent);
+        border: 0; border-radius: 8px; padding: 10px 18px; cursor: pointer;
+      }
+      button:disabled { opacity: 0.5; cursor: default; }
+      .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+      .status { color: var(--muted); font-size: 14px; }
+      .grid3 { display: grid; grid-template-columns: 1fr; gap: 16px; }
+      @media (min-width: 900px) { .grid3 { grid-template-columns: repeat(3, 1fr); } }
+      .scroll { overflow-x: auto; }
+      table { border-collapse: collapse; width: 100%; font-size: 13px; }
+      th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+      th { color: var(--muted); font-weight: 600; }
+      .badge {
+        display: inline-block; min-width: 16px; text-align: center; font-size: 10px; font-weight: 700;
+        border-radius: 4px; padding: 1px 4px; margin-left: 6px; color: #fff; vertical-align: middle;
+      }
+      .badge.A { background: var(--a); }
+      .badge.B { background: var(--b); }
+      .badge.C { background: var(--c); }
+      .pill { display:inline-block; border:1px solid var(--line); border-radius: 999px; padding: 1px 8px; font-size: 11px; color: var(--muted); margin-right: 4px; }
+      code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+      pre { background: #0f1720; color: #e6edf3; padding: 12px; border-radius: 8px; overflow-x: auto; font-size: 13px; }
+      input[type="text"] { font: inherit; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; flex: 1 1 320px; }
+      .muted { color: var(--muted); }
+      .legend .badge { margin: 0 4px 0 0; }
+      .kv { font-size: 13px; }
+      .kv b { font-weight: 600; }
+      details { margin-top: 8px; }
+      summary { cursor: pointer; color: var(--accent); font-size: 13px; }
+      .empty { color: var(--muted); font-size: 14px; padding: 8px 0; }
+      .err { color: #b42318; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Fragment<span>→</span>Unify</h1>
+      <p>
+        Three deliberately messy, schema-divergent sources (a CSV, a JSON API payload, and a
+        scraped HTML table) reconciled by an agentic Claude pipeline into one unified, queryable
+        schema — with per-field source provenance and a natural-language query layer.
+      </p>
+    </header>
+
+    <main>
+      <section>
+        <div class="card">
+          <div class="row">
+            <button id="run">Run pipeline</button>
+            <span class="status" id="status">Ready. Click “Run pipeline” to ingest & reconcile.</span>
+          </div>
+          <div id="summary"></div>
+        </div>
+      </section>
+
+      <section id="before-section" hidden>
+        <h2>Before — 3 fragmented sources</h2>
+        <div class="grid3" id="fragmented"></div>
+      </section>
+
+      <section id="after-section" hidden>
+        <h2>After — 1 unified schema
+          <span class="legend">
+            <span class="pill">provenance:</span>
+            <span class="badge A">A</span>CSV
+            <span class="badge B">B</span>JSON
+            <span class="badge C">C</span>HTML
+          </span>
+        </h2>
+        <div class="card scroll" id="unified"></div>
+      </section>
+
+      <section id="query-section" hidden>
+        <h2>Ask in natural language</h2>
+        <div class="card">
+          <div class="row">
+            <input id="q" type="text" placeholder="e.g. How many contacts in California?" />
+            <button id="ask">Ask</button>
+          </div>
+          <div class="row muted" style="margin-top:8px; font-size:13px;">
+            Try:
+            <a href="#" class="ex">How many contacts in California?</a> ·
+            <a href="#" class="ex">Show companies in New York</a> ·
+            <a href="#" class="ex">List contacts whose email contains acme</a>
+          </div>
+          <div id="query-result"></div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const $ = (id) => document.getElementById(id);
+      const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+      async function jpost(url, body) {
+        const r = await fetch(url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body || {}) });
+        return { ok: r.ok, data: await r.json() };
+      }
+      async function jget(url) {
+        const r = await fetch(url);
+        return { ok: r.ok, data: await r.json() };
+      }
+
+      function renderSummary(s) {
+        const fields = s.inferredSchema.unifiedSchema.fields
+          .map((f) => `<span class="pill">${esc(f.name)}</span>`).join(" ");
+        const maps = s.mappings.map((m) => {
+          const rows = m.mappings
+            .map((x) => `<div class="kv"><b>${esc(x.sourceField)}</b> → ${x.unifiedField ? esc(x.unifiedField) : '<span class="muted">(none)</span>'}</div>`)
+            .join("");
+          return `<details><summary>Source ${esc(m.source)} field mapping</summary>${rows}</details>`;
+        }).join("");
+        $("summary").innerHTML = `
+          <div style="margin-top:14px">
+            <div class="kv"><b>Claude-proposed unified schema:</b> ${fields}</div>
+            <div class="kv muted" style="margin-top:6px">${esc(s.inferredSchema.rationale)}</div>
+            <div class="kv" style="margin-top:8px">
+              <b>${s.counts.sourceRecords}</b> source records
+              (A ${s.counts.bySource.A} · B ${s.counts.bySource.B} · C ${s.counts.bySource.C})
+              → <b>${s.counts.unifiedEntities}</b> unified entities
+            </div>
+            ${maps}
+          </div>`;
+      }
+
+      function fragTable(source, rows) {
+        if (!rows.length) return `<div class="card"><h2>Source ${source}</h2><div class="empty">no rows</div></div>`;
+        const cols = Object.keys(rows[0].raw);
+        const head = cols.map((c) => `<th>${esc(c)}</th>`).join("");
+        const body = rows.map((r) => `<tr>${cols.map((c) => `<td>${esc(r.raw[c])}</td>`).join("")}</tr>`).join("");
+        return `<div class="card"><h2>Source ${source} · ${rows.length} rows</h2><div class="scroll"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div></div>`;
+      }
+
+      function renderFragmented(frag) {
+        $("fragmented").innerHTML = ["A", "B", "C"].map((s) => fragTable(s, frag[s] || [])).join("");
+        $("before-section").hidden = false;
+      }
+
+      function provFor(entity, field) {
+        const p = entity.provenance.find((x) => x.field === field);
+        return p ? `<span class="badge ${p.source}">${p.source}</span>` : "";
+      }
+
+      function renderUnified(rows) {
+        if (!rows.length) { $("unified").innerHTML = '<div class="empty">no unified entities</div>'; $("after-section").hidden = false; return; }
+        const fields = ["company", "contactName", "email", "phone", "state"];
+        const head = fields.map((f) => `<th>${esc(f)}</th>`).join("") + "<th>conf.</th><th>merged</th>";
+        const body = rows.map((e) => {
+          const cells = fields.map((f) => `<td>${esc(e[f])}${provFor(e, f)}</td>`).join("");
+          const conf = `<td>${(e.confidence * 100).toFixed(0)}%</td>`;
+          const members = `<td>${e.members.map((m) => `<span class="pill">${esc(m)}</span>`).join("")}</td>`;
+          return `<tr title="${esc(e.reasoning)}">${cells}${conf}${members}</tr>`;
+        }).join("");
+        $("unified").innerHTML = `<table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`;
+        $("after-section").hidden = false;
+        $("query-section").hidden = false;
+      }
+
+      async function loadRecords() {
+        const { data } = await jget("/api/records");
+        renderFragmented(data.fragmented);
+        renderUnified(data.unified);
+      }
+
+      $("run").addEventListener("click", async () => {
+        $("run").disabled = true;
+        $("status").textContent = "Running pipeline… (infer schema → map fields → reconcile). This calls Claude and takes a few seconds.";
+        $("status").classList.remove("err");
+        const { ok, data } = await jpost("/api/pipeline/run");
+        if (!ok || !data.ok) {
+          $("status").textContent = "Pipeline error: " + (data.error || "unknown");
+          $("status").classList.add("err");
+          $("run").disabled = false;
+          return;
+        }
+        renderSummary(data.summary);
+        await loadRecords();
+        $("status").textContent = `Done — ${data.summary.counts.unifiedEntities} unified entities from ${data.summary.counts.sourceRecords} records.`;
+        $("run").disabled = false;
+      });
+
+      async function ask(q) {
+        $("q").value = q;
+        $("query-result").innerHTML = '<div class="status" style="margin-top:12px">Translating to SQL…</div>';
+        const { ok, data } = await jpost("/api/query", { question: q });
+        if (!ok || !data.ok) {
+          $("query-result").innerHTML = `<div class="err" style="margin-top:12px">${esc(data.error || "error")}</div>`;
+          return;
+        }
+        let rowsHtml;
+        if (!data.rows.length) rowsHtml = '<div class="empty">no matching rows</div>';
+        else {
+          const cols = Object.keys(data.rows[0]);
+          const head = cols.map((c) => `<th>${esc(c)}</th>`).join("");
+          const body = data.rows.map((r) => `<tr>${cols.map((c) => `<td>${esc(r[c])}</td>`).join("")}</tr>`).join("");
+          rowsHtml = `<div class="scroll"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
+        }
+        $("query-result").innerHTML = `
+          <div style="margin-top:14px">
+            <div class="kv muted">${esc(data.spec.explanation)}</div>
+            <div class="kv" style="margin-top:8px"><b>Generated SQL</b> (parameterized — values are bound, never concatenated):</div>
+            <pre>${esc(data.sql)}\n-- params: ${esc(JSON.stringify(data.params))}</pre>
+            <div class="kv"><b>${data.rows.length}</b> row(s):</div>
+            ${rowsHtml}
+          </div>`;
+      }
+
+      $("ask").addEventListener("click", () => { const q = $("q").value.trim(); if (q) ask(q); });
+      $("q").addEventListener("keydown", (e) => { if (e.key === "Enter") { const q = $("q").value.trim(); if (q) ask(q); } });
+      document.querySelectorAll(".ex").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); ask(a.textContent); }));
+
+      // On load, show any data already reconciled in a previous run.
+      loadRecords().catch(() => {});
+    </script>
+  </body>
+</html>

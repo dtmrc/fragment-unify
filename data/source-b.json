@@ -1,0 +1,90 @@
+{
+  "generatedAt": "2026-02-11T09:14:00Z",
+  "source": "crm-export-v3",
+  "records": [
+    {
+      "organization": "Acme Robotics, Inc.",
+      "contactPerson": "Dana Whitfield",
+      "primaryEmail": "dana@acmerobotics.com",
+      "tel": "+14155550132",
+      "hqState": "California"
+    },
+    {
+      "organization": "Northwind Traders LLC",
+      "contactPerson": "Priya Raman",
+      "primaryEmail": "priya@northwind.co",
+      "tel": "(206) 555-9999",
+      "hqState": "WA"
+    },
+    {
+      "organization": "Globex Corp",
+      "contactPerson": "Art Pennington",
+      "primaryEmail": "apennington@globex.com",
+      "tel": "212-555-0171",
+      "hqState": "NJ"
+    },
+    {
+      "organization": "Hooli Inc",
+      "contactPerson": "Gavin Reddy",
+      "primaryEmail": "gavin.reddy@hooli.com",
+      "tel": "650-555-0187",
+      "hqState": "CA"
+    },
+    {
+      "organization": "Umbrella Health Systems",
+      "contactPerson": "Ravi Chandra",
+      "primaryEmail": "ravi.chandra@umbrellahealth.org",
+      "tel": "6175550110",
+      "hqState": "Massachusetts"
+    },
+    {
+      "organization": "Cyberdyne Systems Corp",
+      "contactPerson": "Sarah Kim",
+      "primaryEmail": "skim@cyberdyne.net",
+      "tel": "(818) 555-0159",
+      "hqState": "CA"
+    },
+    {
+      "organization": "Aperture Science Labs",
+      "contactPerson": "Cara Johnson",
+      "primaryEmail": "cjohnson@aperturesci.com",
+      "tel": "425-555-0181",
+      "hqState": "Washington"
+    },
+    {
+      "organization": "Gringotts Financial Group",
+      "contactPerson": "Ronan Griphook",
+      "primaryEmail": "ronan@gringotts.bank",
+      "tel": "2125550163",
+      "hqState": "New York"
+    },
+    {
+      "organization": "Massive Dynamic",
+      "contactPerson": "Nina Sharp",
+      "primaryEmail": "nina@massivedynamic.com",
+      "tel": "917-555-0135",
+      "hqState": "New York"
+    },
+    {
+      "organization": "Wonka Confectionery Co",
+      "contactPerson": "William Vasquez",
+      "primaryEmail": "willy@wonka.com",
+      "tel": "312-555-0198",
+      "hqState": "IL"
+    },
+    {
+      "organization": "Helios Energy Partners",
+      "contactPerson": "Owen Delacroix",
+      "primaryEmail": "owen@heliosenergy.com",
+      "tel": "(303) 555-0221",
+      "hqState": "Colorado"
+    },
+    {
+      "organization": "Meridian Analytics",
+      "contactPerson": "Tess Okonkwo",
+      "primaryEmail": "tess@meridiananalytics.io",
+      "tel": "512-555-0244",
+      "hqState": "TX"
+    }
+  ]
+}

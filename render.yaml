@@ -1,0 +1,15 @@
+# Render blueprint. Deploy: push to a repo, then "New + > Blueprint" on render.com
+# and point it at this file. Railway users: see README (Dockerfile path).
+services:
+  - type: web
+    name: fragment-unify
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false # set this in the Render dashboard; never commit it
+      - key: NODE_VERSION
+        value: "20"

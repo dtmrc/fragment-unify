@@ -1,0 +1,32 @@
+[
+  {
+    "source": "A",
+    "mappings": [
+      { "sourceField": "Company Name", "unifiedField": "company", "note": "direct" },
+      { "sourceField": "contact", "unifiedField": "contactName", "note": "person name" },
+      { "sourceField": "Phone", "unifiedField": "phone", "note": "varied US formats" },
+      { "sourceField": "State", "unifiedField": "state", "note": "name or abbreviation" },
+      { "sourceField": "Email", "unifiedField": "email", "note": "direct" }
+    ]
+  },
+  {
+    "source": "B",
+    "mappings": [
+      { "sourceField": "organization", "unifiedField": "company", "note": "renamed" },
+      { "sourceField": "contactPerson", "unifiedField": "contactName", "note": "renamed" },
+      { "sourceField": "primaryEmail", "unifiedField": "email", "note": "renamed" },
+      { "sourceField": "tel", "unifiedField": "phone", "note": "renamed" },
+      { "sourceField": "hqState", "unifiedField": "state", "note": "renamed" }
+    ]
+  },
+  {
+    "source": "C",
+    "mappings": [
+      { "sourceField": "Company", "unifiedField": "company", "note": "direct" },
+      { "sourceField": "Rep", "unifiedField": "contactName", "note": "sales rep = contact" },
+      { "sourceField": "Telephone", "unifiedField": "phone", "note": "renamed" },
+      { "sourceField": "Location", "unifiedField": "state", "note": "state parsed from 'City, ST'" },
+      { "sourceField": "Contact Email", "unifiedField": "email", "note": "direct" }
+    ]
+  }
+]
