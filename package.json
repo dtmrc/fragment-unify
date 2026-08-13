@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Agentic Claude pipeline that reconciles 3 schema-divergent sources into one unified, queryable schema.",
   "engines": {
-    "node": ">=18"
+    "node": ">=20 <23"
   },
   "scripts": {
     "dev": "tsx watch src/index.ts",
