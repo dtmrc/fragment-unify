@@ -79,7 +79,11 @@ The generated SQL + params are returned to the UI for transparency. See
 
 ## Run locally
 
+> **Node 20 LTS** (`.nvmrc` pins it; `nvm use`). `better-sqlite3` has no prebuilt binary for Node 25 and
+> fails to compile there. The Docker/Render deploy already uses `node:20`, so production is unaffected.
+
 ```bash
+nvm use                       # Node 20
 npm install
 cp .env.example .env          # then put your key in it (see below)
 npm run dev                   # starts http://localhost:3000
